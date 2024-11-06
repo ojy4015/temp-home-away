@@ -96,14 +96,14 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
 //     }
 //   };
 
-  return (
-    <Button
-      type="submit"
-      size="icon"
-      variant="link"
-      className="p-2 cursor-pointer"
-    >
-      {pending ? <ReloadIcon className=" animate-spin" /> : renderIcon()}
-    </Button>
-  );
-};
+//   return (
+//     <Button
+//       type="submit"
+//       size="icon"
+//       variant="link"
+//       className="p-2 cursor-pointer"
+//     >
+//       {pending ? <ReloadIcon className=" animate-spin" /> : renderIcon()}
+//     </Button>
+//   );
+// };
