@@ -80,21 +80,21 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
   );
 };
 
-type actionType = 'edit' | 'delete';
-export const IconButton = ({ actionType }: { actionType: actionType }) => {
-  const { pending } = useFormStatus();
+// type actionType = 'edit' | 'delete';
+// export const IconButton = ({ actionType }: { actionType: actionType }) => {
+//   const { pending } = useFormStatus();
 
-  const renderIcon = () => {
-    switch (actionType) {
-      case 'edit':
-        return <LuPenSquare />;
-      case 'delete':
-        return <LuTrash2 />;
-      default:
-        const never: never = actionType;
-        throw new Error(`Invalid action type: ${never}`);
-    }
-  };
+//   const renderIcon = () => {
+//     switch (actionType) {
+//       case 'edit':
+//         return <LuPenSquare />;
+//       case 'delete':
+//         return <LuTrash2 />;
+//       default:
+//         const never: never = actionType;
+//         throw new Error(`Invalid action type: ${never}`);
+//     }
+//   };
 
   return (
     <Button

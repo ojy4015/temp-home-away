@@ -6,15 +6,15 @@ import PropertyDetails from '@/components/properties/PropertyDetails';
 import ShareButton from '@/components/properties/ShareButton';
 import UserInfo from '@/components/properties/UserInfo';
 import { Separator } from '@/components/ui/separator';
-import { fetchPropertyDetails, findExistingReview } from '@/utils/actions';
+import { fetchPropertyDetails } from '@/utils/actions';
 import { redirect } from 'next/navigation';
 import Description from '@/components/properties/Description';
 import Amenities from '@/components/properties/Amenities';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
-import SubmitReview from '@/components/reviews/SubmitReview';
-import PropertyReviews from '@/components/reviews/PropertyReviews';
-import { auth } from '@clerk/nextjs/server';
+// import SubmitReview from '@/components/reviews/SubmitReview';
+// import PropertyReviews from '@/components/reviews/PropertyReviews';
+// import { auth } from '@clerk/nextjs/server';
 import BookingCalendar from '@/components/properties/BookingCalendar';
 const DynamicMap = dynamic(
   () => import('@/components/properties/PropertyMap'),
