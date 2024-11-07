@@ -1,10 +1,10 @@
 import { FaStar } from 'react-icons/fa';
 
 async function PropertyRating({
-  propertyId,
+  // propertyId,
   inPage,
 }: {
-  propertyId: string;
+  // propertyId: string;
   inPage: boolean;
 }) {
   // const { rating, count } = await fetchPropertyRating(productId);
