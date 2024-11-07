@@ -49,9 +49,3 @@ function PropertyCard({ property }: { property: PropertyCardProps }) {
   );
 }
 export default PropertyCard;
-
-// function PropertyCard() {
-//   return <div>Property Card</div>;
-// }
-
-// export default PropertyCard;
