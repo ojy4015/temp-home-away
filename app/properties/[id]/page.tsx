@@ -46,7 +46,8 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-8">
           <div className="flex gap-x-4 items-center">
             <h1 className="text-xl font-bold">{property.name} </h1>
-            <PropertyRating inPage propertyId={property.id} />
+            {/* <PropertyRating inPage propertyId={property.id} /> */}
+            <PropertyRating inPage />
           </div>
           <PropertyDetails details={details} />
           <UserInfo profile={{ profileImage, firstName }} />
