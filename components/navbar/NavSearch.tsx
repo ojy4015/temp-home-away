@@ -1,7 +1,7 @@
 'use client';
 import { Input } from '../ui/input';
 // client component
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { useState, useEffect } from 'react';
 
@@ -9,7 +9,6 @@ function NavSearch() {
   // next/navigation의 useSerchParams 훅에서 쿼리스트링을 읽을 수 있다.
   const searchParams = useSearchParams();
   // console.log('searchParams >> ', searchParams); //searchParams >>  ReadonlyURLSearchParams { 'category' => 'cabin' }
-  const pathname = usePathname();
   // console.log('pathname >> ', pathname); //pathname >>  /
 
   const { replace } = useRouter();
@@ -35,7 +34,7 @@ function NavSearch() {
     }
     // console.log('params >>>> ', params.getAll);
     // console.log('pathname >> ', pathname);
-    replace(`${pathname}/?${params.toString()}`);
+    replace(`/?${params.toString()}`);
   }, 500);
 
   useEffect(() => {
