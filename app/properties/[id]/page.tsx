@@ -6,19 +6,34 @@ import PropertyDetails from '@/components/properties/PropertyDetails';
 import ShareButton from '@/components/properties/ShareButton';
 import UserInfo from '@/components/properties/UserInfo';
 import { Separator } from '@/components/ui/separator';
-import { fetchPropertyDetails } from '@/utils/actions';
+import {
+  fetchPropertyDetails,
+  findExistingPropertyReview,
+} from '@/utils/actions';
 import { redirect } from 'next/navigation';
 import Description from '@/components/properties/Description';
 import Amenities from '@/components/properties/Amenities';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import BookingCalendar from '@/components/properties/BookingCalendar';
+import SubmitPropertiesReview from '@/components/reviews/SubmitPropertiesReview';
+import PropertyReviews from '@/components/reviews/PropertyReviews';
+import { auth } from '@clerk/nextjs/server';
+
 const DynamicMap = dynamic(
   () => import('@/components/properties/PropertyMap'),
   {
     ssr: false,
     loading: () => <Skeleton className="h-[400px] w-full" />,
+  }
+);
+
+// render booking wrapper when we are on the client
+const DynamicBookingWrapper = dynamic(
+  () => import('@/components/booking/BookingWrapper'),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[200px] w-full" />,
   }
 );
 
@@ -30,6 +45,17 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
   const details = { baths, bedrooms, beds, guests };
   const firstName = property.profile.firstName;
   const profileImage = property.profile.profileImage;
+
+  const { userId } = auth(); // 현재 로그인한 사람
+  // property.profile.clerkId : ID for property owner
+  const isNotOwner = property.profile.clerkId !== userId;
+  // 로그인했고 owner가 아니고 아직 리뷰를 남기지 않았으면
+  const reviewDoesNotExist =
+    userId &&
+    isNotOwner &&
+    !(await findExistingPropertyReview(userId, property.id));
+
+  // console.log('property.bookings ', property.bookings);
 
   return (
     <section>
@@ -46,8 +72,7 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-8">
           <div className="flex gap-x-4 items-center">
             <h1 className="text-xl font-bold">{property.name} </h1>
-            {/* <PropertyRating inPage propertyId={property.id} /> */}
-            <PropertyRating inPage />
+            <PropertyRating inPage propertyId={property.id} />
           </div>
           <PropertyDetails details={details} />
           <UserInfo profile={{ profileImage, firstName }} />
@@ -57,9 +82,17 @@ async function PropertyDetailsPage({ params }: { params: { id: string } }) {
           <DynamicMap countryCode={property.country} />
         </div>
         <div className="lg:col-span-4">
-          <BookingCalendar />
+          <DynamicBookingWrapper
+            propertyId={property.id}
+            price={property.price}
+            bookings={property.bookings}
+          />
         </div>
       </section>
+      {reviewDoesNotExist && (
+        <SubmitPropertiesReview propertyId={property.id} />
+      )}
+      <PropertyReviews propertyId={property.id} />
     </section>
   );
 }

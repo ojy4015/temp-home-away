@@ -25,6 +25,7 @@ function FavoriteToggleForm({
   });
   return (
     <FormContainer action={toggleAction}>
+      {/* favoriteId에 따라 icon 만 변경 */}
       <CardSubmitButton isFavorite={favoriteId ? true : false} />
     </FormContainer>
   );

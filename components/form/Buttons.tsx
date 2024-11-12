@@ -40,6 +40,7 @@ export function SubmitButton({
   );
 }
 
+// 아이콘만 선택함
 export const CardSignInButton = () => {
   return (
     <SignInButton mode="modal">
@@ -55,7 +56,7 @@ export const CardSignInButton = () => {
     </SignInButton>
   );
 };
-
+//favorite가 존재하면 <FaRegHeart>, null 이면</FaRegHeart>
 export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
   const { pending } = useFormStatus();
   return (

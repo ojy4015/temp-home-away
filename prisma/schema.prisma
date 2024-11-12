@@ -22,6 +22,10 @@ model Profile {
   propertiesfavorites PropertiesFavorite[] // 1 to many
   products     Product[]  // 1 to many 
   productsfavorites ProductsFavorite[] // 1 to many
+  propertiesreviews PropertiesReview[] // 1 to many
+  productsreviews ProductsReview[] // 1 to many
+  bookings Booking[] // 1 to many
+  eduBookings EduBooking[] // 1 to many
 }
 
 model Property {
@@ -43,8 +47,8 @@ model Property {
   profile     Profile    @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
   profileId   String
   propertiesfavorites PropertiesFavorite[] // 1 to many
-  // reviews Review[] // 1 to many
-  // bookings Booking[]
+  propertiesreviews PropertiesReview[] // 1 to many
+  bookings Booking[] // 1 to  many
 }
 
 
@@ -64,9 +68,9 @@ model Product {
   updatedAt   DateTime   @updatedAt
   profile     Profile    @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
   profileId   String
-   productsfavorites ProductsFavorite[] // 1 to many
-  // reviews Review[]
-  // bookings Booking[]
+  productsfavorites ProductsFavorite[] // 1 to many
+  productsreviews ProductsReview[] // 1 to many
+  eduBookings EduBooking[] // 1 to many
 }
 
 model PropertiesFavorite {
@@ -95,3 +99,55 @@ model ProductsFavorite {
 
 }
 
+model PropertiesReview {
+  id        String   @id @default(uuid())
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductsReview {
+  id        String   @id @default(uuid())
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  orderTotal     Int
+  totalNights    Int
+  checkIn   DateTime
+  checkOut  DateTime
+  paymentStatus Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model EduBooking {
+  id        String   @id @default(uuid())
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  orderTotal Int
+  orderDate DateTime
+  paymentStatus Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
