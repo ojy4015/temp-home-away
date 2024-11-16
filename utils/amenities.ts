@@ -27,6 +27,7 @@ import {
   FiTv,
 } from 'react-icons/fi';
 
+// icon은 db에 저장되지 않음
 export const amenities: Amenity[] = [
   { name: 'unlimited cloud storage', icon: FiCloud, selected: false },
   { name: 'VIP parking for squirrels', icon: FiTruck, selected: false },

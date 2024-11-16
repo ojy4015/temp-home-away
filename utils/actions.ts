@@ -1,12 +1,5 @@
 'use server';
 
-// import {
-//   imageSchema,
-//   profileSchema,
-//   propertySchema,
-//   validateWithZodSchema,
-//   createReviewSchema,
-// } from './schemas';
 import {
   createPropertiesReviewSchema,
   imageSchema,
@@ -22,6 +15,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { uploadImage } from './supabase';
 import { calculateTotals } from './calculateTotals';
+import { formatDate } from './format';
 
 // get entire user including metadata(hasProfile)
 const getAuthUser = async () => {
@@ -30,6 +24,12 @@ const getAuthUser = async () => {
     throw new Error('You must be logged in to access this route');
   }
   if (!user.privateMetadata.hasProfile) redirect('/profile/create');
+  return user;
+};
+
+const getAdminUser = async () => {
+  const user = await getAuthUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect('/');
   return user;
 };
 
@@ -327,7 +327,7 @@ export async function createPropertiesReviewAction(
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
-    console.log('rawData 666 : ', rawData);
+    // console.log('rawData 666 : ', rawData);
 
     const validatedFields = validateWithZodSchema(
       createPropertiesReviewSchema,
@@ -609,6 +609,7 @@ export async function deleteRentalAction(prevState: { propertyId: string }) {
   }
 }
 
+// get all of current property values of logged in user
 export const fetchRentalDetails = async (propertyId: string) => {
   const user = await getAuthUser();
 
@@ -656,6 +657,7 @@ export const updatePropertyImageAction = async (
 
   try {
     const image = formData.get('image') as File;
+    // console.log('image ---> ', image);
     const validatedFields = validateWithZodSchema(imageSchema, { image });
     const fullPath = await uploadImage(validatedFields.image);
 
@@ -678,9 +680,11 @@ export const updatePropertyImageAction = async (
 export const fetchReservations = async () => {
   const user = await getAuthUser();
 
+  // console.log('user 555 ', user.id);
+
   const reservations = await db.booking.findMany({
     where: {
-      paymentStatus: true,
+      // paymentStatus: true,
       property: {
         profileId: user.id,
       },
@@ -707,11 +711,12 @@ export const fetchStats = async () => {
 
   const usersCount = await db.profile.count();
   const propertiesCount = await db.property.count();
-  const bookingsCount = await db.booking.count({
-    where: {
-      paymentStatus: true,
-    },
-  });
+  const bookingsCount = await db.booking.count();
+  // const bookingsCount = await db.booking.count({
+  //   where: {
+  //     paymentStatus: true,
+  //   },
+  // });
 
   return {
     usersCount,
@@ -723,12 +728,16 @@ export const fetchStats = async () => {
 export const fetchChartsData = async () => {
   await getAdminUser();
   const date = new Date();
+
+  // display last 6month
   date.setMonth(date.getMonth() - 6);
+  // 지금으로 부터 6개월 전
   const sixMonthsAgo = date;
 
+  // 6개월전부터 지금까지 모든booking array
   const bookings = await db.booking.findMany({
     where: {
-      paymentStatus: true,
+      // paymentStatus: true,
       createdAt: {
         gte: sixMonthsAgo,
       },
@@ -737,17 +746,24 @@ export const fetchChartsData = async () => {
       createdAt: 'asc',
     },
   });
+  // console.log('bookings : ', bookings);
+
+  // how many bookings have been made in that specific month
   const bookingsPerMonth = bookings.reduce((total, current) => {
+    // group bookings array by month, date has only year and month
     const date = formatDate(current.createdAt, true);
+    // console.log('date : ', date);
     const existingEntry = total.find((entry) => entry.date === date);
+    // console.log('existingEntry : ', existingEntry);
     if (existingEntry) {
       existingEntry.count += 1;
     } else {
       total.push({ date, count: 1 });
     }
+    // console.log('total : ', total);
     return total;
   }, [] as Array<{ date: string; count: number }>);
-  return bookingsPerMonth;
+  return bookingsPerMonth; // return array of date and count
 };
 
 export const fetchReservationStats = async () => {

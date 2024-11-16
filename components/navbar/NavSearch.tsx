@@ -18,7 +18,7 @@ function NavSearch() {
     searchParams.get('search')?.toString() || ''
   );
 
-  console.log('search >> ', search);
+  // console.log('search >> ', search);
 
   // navigate to back to homepage
   const handleSearch = useDebouncedCallback((value: string) => {

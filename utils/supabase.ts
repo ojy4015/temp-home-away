@@ -8,7 +8,7 @@ const key = process.env.SUPBASE_KEY as string;
 const supabase = createClient(url, key);
 
 export const uploadImage = async (image: File) => {
-  console.log('image -----> ', image);
+  // console.log('image -----> ', image);
   // image9
   const timestamp = Date.now();
   const newName = `/users/${timestamp}-${image.name}`; //image9
